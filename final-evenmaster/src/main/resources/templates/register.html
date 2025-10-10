@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Qeydiyyat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/front/styles.css" />
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/login">Giriş</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container" style="max-width: 520px; text-align: left;">
+        <h1 style="margin-bottom: 12px;">Qeydiyyat</h1>
+        <p class="lead" style="margin-bottom: 18px;">Hesab yaradın və EventMaster imkanlarından yararlanın.</p>
+        <form method="post" action="/register" class="card" id="register-form" style="display: grid; gap: 12px; padding: 18px;">
+          <label>
+            <span class="sr-only">Ad, Soyad</span>
+            <input type="text" name="fullName" placeholder="Ad, Soyad" required style="width: 100%; padding: 12px; border-radius: 10px; background: #161822; border: 1px solid var(--border); color: var(--text);" />
+          </label>
+          <label>
+            <span class="sr-only">E-poçt</span>
+            <input type="email" name="email" placeholder="E-poçt" required style="width: 100%; padding: 12px; border-radius: 10px; background: #161822; border: 1px solid var(--border); color: var(--text);" />
+          </label>
+            <div th:if="${emailError}" style="color: red; margin-top: 6px;">
+                <p th:text="${emailError}"></p>
+            </div>
+
+            <label>
+            <span class="sr-only">Şifrə</span>
+            <input type="password" name="password" placeholder="Şifrə (min 6 simvol)" required minlength="6" style="width: 100%; padding: 12px; border-radius: 10px; background: #161822; border: 1px solid var(--border); color: var(--text);" />
+          </label>
+
+          <div style="display: grid; gap: 10px;">
+            <span style="color: var(--muted);">Rol seçin</span>
+            <div style="display: grid; gap: 8px;">
+              <label style="display:flex; align-items:center; gap:10px;">
+                <input type="radio" name="role" value="user" checked />
+                <span>İstifadəçi</span>
+              </label>
+              <label style="display:flex; align-items:center; gap:10px;">
+                <input type="radio" name="role" value="organizer" />
+                <span>Tədbir təşkilatçısı</span>
+              </label>
+              <label style="display:flex; align-items:center; gap:10px;">
+                <input type="radio" name="role" value="admin" />
+                <span>Admin</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn primary" type="submit">Qeydiyyatdan keç</button>
+          <p style="color: var(--muted); margin: 0;">Artıq hesabın var? <a href="/login">Giriş et</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="index/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+

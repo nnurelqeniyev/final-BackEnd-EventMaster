@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Tədbirlər Kataloqu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events" aria-current="page">Tədbirlər</a>
+        <a href="/login">Giriş</a>
+        <a class="btn ghost" href="/register">Qeydiyyat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="events" style="padding-top: 24px;">
+      <div class="container">
+        <h1 style="margin: 0 0 12px;">Bütün tədbirlər</h1>
+        <p class="lead" style="margin: 0 0 16px;">Axtarın, filtrləyin və maraqlı tədbirləri kəşf edin.</p>
+
+        <form id="filter-form" class="filters">
+          <div class="filters-row">
+            <input type="text" id="q" placeholder="Ada görə axtar" />
+            <input type="text" id="location" placeholder="Məkana görə" />
+            <input type="date" id="fromDate" />
+            <input type="date" id="toDate" />
+            <select id="sort">
+              <option value="nearest">Yaxın tarix</option>
+              <option value="price_asc">Qiymət: Aşağıdan yuxarı</option>
+              <option value="price_desc">Qiymət: Yuxarıdan aşağı</option>
+            </select>
+            <button class="btn" type="reset" id="resetFilters">Sıfırla</button>
+          </div>
+        </form>
+
+
+          <div id="resultsCount" th:text="${#lists.size(events)} + ' nəticə'" style="color: var(--muted); margin: 8px 0 16px;"></div>
+
+          <div class="event-list">
+              <article class="event" th:each="ev : ${events}">
+                  <a th:href="@{'/event?id=' + ${ev.id}}" style="text-decoration:none; color:inherit; display:block;">
+                      <div class="event-media">
+                          <img th:src="${ev.image}" th:alt="${ev.title}" loading="lazy" />
+                          <span class="badge" th:text="${#dates.format(ev.dateLine, 'dd.MM.yyyy')}"></span>
+                      </div>
+                      <div class="event-body">
+                          <h4 th:text="${ev.title}"></h4>
+                          <p th:text="${ev.location}"></p>
+                          <div class="event-meta">
+                              <span class="price" th:text="${ev.priceStandard > 0 ? ev.priceStandard + ' AZN' : 'Pulsuz'}"></span>
+                              <a class="btn small" th:href="@{'/event?id=' + ${ev.id}}">Daha çox</a>
+                          </div>
+                      </div>
+                  </a>
+              </article>
+          </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+

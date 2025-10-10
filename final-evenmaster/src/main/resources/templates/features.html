@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Xüsusiyyətlər</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events">Tədbirlər</a>
+          <a sec:authorize="hasRole('ORGANIZER')" href="/events/create">Təşkilatçı</a>
+          <a  sec:authorize="hasRole('ADMIN')" href="/admin">Admin</a>
+        <a href="/login">Giriş</a>
+        <a class="btn ghost" href="/register">Qeydiyyat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="features" style="padding-top: 24px;">
+      <div class="container grid">
+        <article class="card">
+          <div class="icon">🎟️</div>
+          <h3>Çevik bilet sistemi</h3>
+          <p>Standart və VIP səviyyələr, çoxsaylı bilet alışı və toplam hesablanma.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🗺️</div>
+          <h3>Ağıllı axtarış və filtr</h3>
+          <p>Ad, məkan, tarix aralığı və qiymətə görə sıralama.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🤝</div>
+          <h3>Təşkilatçı paneli</h3>
+          <p>Tədbir yarat, redaktə et və admin təsdiqinə göndər.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🛡️</div>
+          <h3>Admin təsdiqi</h3>
+          <p>Təqdim olunan tədbirləri yoxla, təsdiqlə və ya sil.</p>
+        </article>
+        <article class="card">
+          <div class="icon">⚡</div>
+          <h3>Sürətli frontend demo</h3>
+          <p>localStorage ilə oflayn işləyən nümunə infrastruktur.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🔒</div>
+          <h3>Genişlənə bilən</h3>
+          <p>Backend/kimlik sisteminə asan inteqrasiya üçün hazırlanıb.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+

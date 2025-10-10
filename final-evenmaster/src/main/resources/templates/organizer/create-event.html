@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Təşkilatçı Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events">Tədbirlər</a>
+        <a href="/admin">Admin</a>
+        <a href="/login">Giriş</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="events" style="padding-top: 24px;">
+      <div class="container">
+        <h1 style="margin: 0 0 16px;">Tədbir yarat</h1>
+          <form id="createForm" th:action="@{/events/create}" th:object="${eventDto}" method="post" class="card" style="display:grid; gap:12px; padding:16px;">
+              <input type="text" th:field="*{title}" placeholder="Tədbirin adı" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <input type="date" th:field="*{dateLine}"required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+              <p>Şirkət: <span th:text="${organizer.company.name}" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);"></span></p>
+              <select th:field="*{location}" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);">
+                  <option value="">Məkan seçin</option>
+                  <option value="Bütün Azərbaycan">Bütün Azərbaycan</option>
+                  <optgroup label="Şəhərlər">
+                      <option value="Bakı">Bakı</option>
+                      <option value="Gəncə">Gəncə</option>
+                      <option value="Sumqayıt">Sumqayıt</option>
+                      <option value="Mingəçevir">Mingəçevir</option>
+                      <option value="Şirvan">Şirvan</option>
+                      <option value="Lənkəran">Lənkəran</option>
+                      <option value="Naftalan">Naftalan</option>
+                      <option value="Şəki">Şəki</option>
+                      <option value="Yevlax">Yevlax</option>
+                      <option value="Naxçıvan">Naxçıvan</option>
+                  </optgroup>
+                  <optgroup label="Rayonlar">
+                      <option value="Abşeron">Abşeron</option>
+                      <option value="Ağcabədi">Ağcabədi</option>
+                      <option value="Ağdam">Ağdam</option>
+                      <option value="Ağdaş">Ağdaş</option>
+                      <option value="Ağstafa">Ağstafa</option>
+                      <option value="Ağsu">Ağsu</option>
+                      <option value="Astara">Astara</option>
+                      <option value="Balakən">Balakən</option>
+                      <option value="Bərdə">Bərdə</option>
+                      <option value="Beyləqan">Beyləqan</option>
+                      <option value="Biləsuvar">Biləsuvar</option>
+                      <option value="Cəlilabad">Cəlilabad</option>
+                      <option value="Daşkəsən">Daşkəsən</option>
+                      <option value="Füzuli">Füzuli</option>
+                      <option value="Gədəbəy">Gədəbəy</option>
+                      <option value="Goranboy">Goranboy</option>
+                      <option value="Göyçay">Göyçay</option>
+                      <option value="Göygöl">Göygöl</option>
+                      <option value="Hacıqabul">Hacıqabul</option>
+                      <option value="İmişli">İmişli</option>
+                      <option value="İsmayıllı">İsmayıllı</option>
+                      <option value="Kürdəmir">Kürdəmir</option>
+                      <option value="Qax">Qax</option>
+                      <option value="Qazax">Qazax</option>
+                      <option value="Qəbələ">Qəbələ</option>
+                      <option value="Qobustan">Qobustan</option>
+                      <option value="Quba">Quba</option>
+                      <option value="Qubadlı">Qubadlı</option>
+                      <option value="Qusar">Qusar</option>
+                      <option value="Laçın">Laçın</option>
+                      <option value="Lerik">Lerik</option>
+                      <option value="Masallı">Masallı</option>
+                      <option value="Neftçala">Neftçala</option>
+                      <option value="Oğuz">Oğuz</option>
+                      <option value="Saatlı">Saatlı</option>
+                      <option value="Sabirabad">Sabirabad</option>
+                      <option value="Salyan">Salyan</option>
+                      <option value="Samux">Samux</option>
+                      <option value="Siyəzən">Siyəzən</option>
+                      <option value="Sumqayıt">Sumqayıt</option>
+                      <option value="Şabran">Şabran</option>
+                      <option value="Şamaxı">Şamaxı</option>
+                      <option value="Şəki">Şəki</option>
+                      <option value="Şəmkir">Şəmkir</option>
+                      <option value="Şuşa">Şuşa</option>
+                      <option value="Tərtər">Tərtər</option>
+                      <option value="Tovuz">Tovuz</option>
+                      <option value="Ucar">Ucar</option>
+                      <option value="Xaçmaz">Xaçmaz</option>
+                      <option value="Xızı">Xızı</option>
+                      <option value="Xocalı">Xocalı</option>
+                      <option value="Xocavənd">Xocavənd</option>
+                      <option value="Yardımlı">Yardımlı</option>
+                      <option value="Zaqatala">Zaqatala</option>
+                      <option value="Zəngilan">Zəngilan</option>
+                      <option value="Zərdab">Zərdab</option>
+                  </optgroup>
+                  <optgroup label="Naxçıvan MR">
+                      <option value="Babək">Babək</option>
+                      <option value="Culfa">Culfa</option>
+                      <option value="Kəngərli">Kəngərli</option>
+                      <option value="Ordubad">Ordubad</option>
+                      <option value="Şahbuz">Şahbuz</option>
+                      <option value="Sədərək">Sədərək</option>
+                  </optgroup>
+              </select>
+          </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="number" min="0" th:field="*{priceStandard}" placeholder="Standart qiymət (AZN)" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+                <input type="number" min="0" th:field="*{priceVip}" placeholder="VIP qiymət (AZN, opsional)" style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+            </div>
+            <input type="url" th:field="*{image}" placeholder="Şəkil URL" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+          <textarea th:field="*{description}"placeholder="Təsvir" rows="4" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);"></textarea>
+          <button class="btn primary" type="submit">Göndər</button>
+          <p style="color:var(--muted); margin:0;">Qeyd: Admin təsdiq etdikdən sonra siyahıda görünəcək.</p>
+        </form>
+
+        <h2 style="margin: 18px 0 8px;">Mənim göndərdiklərim</h2>
+        <div id="mineList" style="display:grid; gap:10px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'em_events';
+    function getAll(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+    function saveAll(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+    function nextId(){ return Date.now(); }
+
+    function renderMine(){
+      const mine = getAll().filter(e => e.owner === 'me');
+      const box = document.getElementById('mineList');
+      box.innerHTML = mine.length ? mine.map(e => `
+        <article class="event" style="display:grid; grid-template-columns: 160px 1fr auto; gap:12px; padding:12px;">
+          <img src="${e.image}" alt="${e.name}" style="width:160px; height:100px; object-fit:cover; border-radius:10px; border:1px solid var(--border);"/>
+          <div style="display:grid; gap:4px;">
+            <strong>${e.name}</strong>
+            <span style=\"color:var(--muted)\">${new Date(e.date).toLocaleDateString('az-AZ')} • ${e.location}</span>
+            <span>${e.price > 0 ? e.price + ' AZN' : 'Pulsuz'}</span>
+            <span style="color:${e.approved ? '#00d1b2' : '#a6adbb'}">${e.approved ? 'Təsdiqlənib' : 'Təsdiq gözləyir'}</span>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn ghost" data-action="delete" data-id="${e.id}">Sil</button>
+          </div>
+        </article>
+      `).join('') : '<p style="color:var(--muted); margin:0;">Heç bir tədbir göndərməmisiniz.</p>';
+    }
+
+    document.getElementById('createForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+            const standard = Number(fd.get('price_standard') || 0);
+      const vip = fd.get('price_vip') !== null && fd.get('price_vip') !== '' ? Number(fd.get('price_vip')) : null;
+      const tiers = [];
+      tiers.push({ id: 'std', name: 'Standart', price: standard, perks: ['Ümumi giriş'] });
+      if (vip !== null) tiers.push({ id: 'vip', name: 'VIP', price: vip, perks: ['Ön sıralar', 'VIP lounge'] });
+
+      const ev = {
+        id: nextId(),
+        name: fd.get('name'),
+        date: fd.get('date'),
+        location: fd.get('location'),
+        price: standard,
+        image: fd.get('image'),
+        description: fd.get('description'),
+        tiers: tiers,
+        approved: false,
+        owner: 'me'
+      };
+      const all = getAll();
+      all.push(ev);
+      saveAll(all);
+      e.target.reset();
+      alert('Tədbir göndərildi. Admin təsdiqini gözləyir.');
+      renderMine();
+    });
+
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      if (t.matches('[data-action="delete"]')){
+        const id = Number(t.getAttribute('data-id'));
+        const rest = getAll().filter(x => x.id !== id);
+        saveAll(rest);
+        renderMine();
+      }
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderMine();
+  </script>
+</body>
+</html>
+
+

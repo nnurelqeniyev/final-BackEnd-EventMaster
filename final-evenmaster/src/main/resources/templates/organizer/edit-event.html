@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tədbiri redaktə et</title>
+    <link rel="stylesheet" href="/front/styles.css">
+</head>
+<body>
+<main class="container">
+    <h2>Tədbiri redaktə et</h2>
+
+    <form th:action="@{'/events/edit/' + ${eventId}}" th:object="${eventDto}" method="post">
+        <label>Başlıq:</label>
+        <input type="text" th:field="*{title}" required />
+
+        <label>Təsvir:</label>
+        <textarea th:field="*{description}" required></textarea>
+
+        <label>Məkan:</label>
+        <input type="text" th:field="*{location}" required />
+
+        <label>Tarix:</label>
+        <input type="date" th:field="*{dateLine}" required />
+
+        <label>Standart bilet qiyməti:</label>
+        <input type="number" th:field="*{priceStandard}" required />
+
+        <label>VIP bilet qiyməti:</label>
+        <input type="number" th:field="*{priceVip}" />
+
+        <label>Şəkil URL:</label>
+        <input type="text" th:field="*{image}" />
+
+        <button type="submit">Yadda saxla</button>
+    </form>
+</main>
+</body>
+</html>

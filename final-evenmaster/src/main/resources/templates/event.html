@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Tədbir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events">Tədbirlər</a>
+        <a href="/login">Giriş</a>
+        <a class="btn ghost" href="/register">Qeydiyyat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" style="padding-top: 24px;">
+      <div class="container event-detail">
+        <div class="event-hero">
+          <img id="eventImage" alt="" />
+          <div class="event-hero-meta">
+            <h1 id="eventName"></h1>
+            <p class="lead" id="eventInfo"></p>
+          </div>
+        </div>
+
+        <div class="event-content">
+          <article class="card">
+            <h3 style="margin:0 0 8px;">Haqqında</h3>
+            <p id="eventDesc" style="color: var(--muted); margin: 0; line-height: 1.6;"></p>
+          </article>
+
+          <aside class="card">
+            <h3 style="margin:0 0 8px;">Biletlər</h3>
+            <div id="ticketOptions" class="ticket-options"></div>
+            <div style="display:flex; align-items:center; justify-content: space-between; margin-top: 12px;">
+              <label style="display:flex; align-items:center; gap:8px;">
+                <span>Say:</span>
+                <input id="qty" type="number" min="1" value="1" style="width:80px; background:#161822; border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:10px;" />
+              </label>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span>Toplam:</span>
+                <strong id="totalPrice">0 AZN</strong>
+              </div>
+            </div>
+            <button id="buyBtn" class="btn primary" style="margin-top: 12px; width: 100%;">Bileti al</button>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const SEED = [
+      { id: 1, name: 'Tech Summit Bakı 2025', date: '2025-11-12', location: 'Bakı Konqres Mərkəzi', price: 49, image: 'https://picsum.photos/seed/techsummit/1200/600',
+        description: 'Texnologiya liderləri və startapların toplandığı illik konfrans. Mühazirələr, panellər və networking.' },
+      { id: 2, name: 'Indie Musiqi Gecəsi', date: '2025-10-25', location: 'Onlayn', price: 19, image: 'https://picsum.photos/seed/indie/1200/600',
+        description: 'Müstəqil musiqi səhnəsinin ən yaxşı ifaçıları ilə unudulmaz gecə.' },
+      { id: 3, name: 'Startap Həftəsi', date: '2025-12-03', location: 'SUP Accelerators', price: 0, image: 'https://picsum.photos/seed/startup/1200/600',
+        description: 'Məşğələlər, mentorluq və təqdimatlarla dolu startap marafonu.' },
+      { id: 4, name: 'Dizayn & UX Seminarı', date: '2025-10-28', location: 'ADA Universiteti', price: 25, image: 'https://picsum.photos/seed/design/1200/600',
+        description: 'Müasir məhsullarda dizayn düşüncəsi və istifadəçi təcrübəsinin təkmilləşdirilməsi.' }
+    ];
+    const STORAGE_KEY = 'em_events';
+    function getAll(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+    function merged(){
+      const approved = getAll().filter(e => e.approved);
+      const byId = new Map([...SEED, ...approved].map(e => [e.id, e]));
+      return Array.from(byId.values());
+    }
+
+    function qs(name) {
+      const p = new URLSearchParams(location.search);
+      return p.get(name);
+    }
+
+    const id = Number(qs('id')) || 1;
+    const ev = merged().find(e => e.id === id) || merged()[0];
+
+    const baseTiers = Array.isArray(ev.tiers) && ev.tiers.length
+      ? ev.tiers
+      : (ev.price === 0
+          ? [ { id: 'free', name: 'Pulsuz giriş', price: 0, perks: ['Ümumi giriş'] } ]
+          : [
+              { id: 'std', name: 'Standart', price: ev.price, perks: ['Ümumi giriş'] },
+              { id: 'vip', name: 'VIP', price: (ev.price || 0) + 50, perks: ['Ön sıralar', 'VIP lounge'] }
+            ]
+        );
+
+    const els = {
+      year: document.getElementById('year'),
+      name: document.getElementById('eventName'),
+      info: document.getElementById('eventInfo'),
+      desc: document.getElementById('eventDesc'),
+      img: document.getElementById('eventImage'),
+      options: document.getElementById('ticketOptions'),
+      total: document.getElementById('totalPrice'),
+      qty: document.getElementById('qty'),
+      buy: document.getElementById('buyBtn')
+    };
+
+    function formatDate(d){ return new Date(d).toLocaleDateString('az-AZ'); }
+
+    function render() {
+      els.year.textContent = new Date().getFullYear();
+      els.name.textContent = ev.name;
+      els.info.textContent = `${formatDate(ev.date)} • ${ev.location}`;
+      els.desc.textContent = ev.description;
+      els.img.src = ev.image;
+      els.img.alt = ev.name;
+
+      els.options.innerHTML = baseTiers.map((t, i) => `
+        <label class="ticket-tier">
+          <input type="radio" name="tier" value="${t.id}" ${i===0 ? 'checked' : ''} />
+          <div class="tier-body">
+            <div class="tier-head">
+              <span class="tier-name">${t.name}</span>
+              <span class="tier-price">${t.price > 0 ? t.price + ' AZN' : 'Pulsuz'}</span>
+            </div>
+            <div class="tier-perks">${t.perks.join(' • ')}</div>
+          </div>
+        </label>
+      `).join('');
+
+      updateTotal();
+    }
+
+    function currentTierPrice(){
+      const selected = document.querySelector('input[name="tier"]:checked');
+      const t = baseTiers.find(x => x.id === (selected && selected.value));
+      return t ? t.price : 0;
+    }
+
+    function updateTotal(){
+      const qty = Math.max(1, Number(els.qty.value) || 1);
+      const price = currentTierPrice();
+      els.total.textContent = (price * qty) + ' AZN';
+    }
+
+    document.addEventListener('change', (e) => {
+      if (e.target && (e.target.name === 'tier' || e.target.id === 'qty')) updateTotal();
+    });
+    els.qty.addEventListener('input', updateTotal);
+
+    els.buy.addEventListener('click', () => {
+      const qty = Math.max(1, Number(els.qty.value) || 1);
+      const total = els.total.textContent;
+      alert(`Sifariş təsdiqləndi (demo) — Miqdar: ${qty}, Toplam: ${total}`);
+      window.location.href = '/events';
+    });
+
+    render();
+  </script>
+</body>
+</html>
+
+

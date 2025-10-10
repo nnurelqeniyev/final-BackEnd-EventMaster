@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Əlaqə</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events">Tədbirlər</a>
+        <a href="/features">Xüsusiyyətlər</a>
+          <a sec:authorize="hasRole('ORGANIZER')" href="/events/create">Təşkilatçı</a>
+          <a  sec:authorize="hasRole('ADMIN')" href="/admin">Admin</a>
+        <a href="/login">Giriş</a>
+        <a class="btn ghost" href="/register">Qeydiyyat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="events" style="padding-top: 24px;">
+      <div class="container">
+        <h1 style="margin: 0 0 12px;">Əlaqə</h1>
+        <p class="lead" style="margin: 0 0 16px;">Bizə yazın — ən qısa zamanda geri dönüş edəcəyik.</p>
+        <form id="contactForm" class="card" style="display:grid; gap:12px; padding:16px; max-width: 560px;">
+          <input type="text" name="name" placeholder="Ad, Soyad" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+          <input type="email" name="email" placeholder="E-poçt" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+          <textarea name="message" rows="5" placeholder="Mesaj" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);"></textarea>
+          <button class="btn primary" type="submit">Göndər</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="mailto:support@eventmaster.az">support@eventmaster.az</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      alert('Mesajınız göndərildi (demo). Təşəkkür edirik!');
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
+
+

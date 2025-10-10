@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/events">Tədbirlər</a>
+        <a href="/organizer">Təşkilatçı</a>
+        <a href="/login">Giriş</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="events" style="padding-top: 24px;">
+      <div class="container">
+        <h1 style="margin: 0 0 16px;">Admin Panel</h1>
+
+        <div class="card" style="margin-bottom:16px;">
+          <h3 style="margin: 0 0 8px;">Təqdim olunmuş tədbirlər (təsdiq gözləyir)</h3>
+          <div id="pendingList" style="display:grid; gap:10px;"></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Təsdiqlənmiş tədbirlər</h3>
+          <div id="approvedList" style="display:grid; gap:10px;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'em_events';
+    function getAll(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
+    }
+    function saveAll(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+    function ensureSeed(){
+      const current = getAll();
+      if (current.length) return;
+      const seed = [
+        { id: Date.now()-2, name: 'AI Hackathon', date: '2025-11-05', location: 'Bakı İnnoland', price: 10, image: 'https://picsum.photos/seed/aih/600/360', description: '48 saatlıq AI hakatonu.', approved: false, owner: 'demo' },
+        { id: Date.now()-1, name: 'Marketing Forum', date: '2025-10-30', location: 'Hilton Baku', price: 35, image: 'https://picsum.photos/seed/mkt/600/360', description: 'Brend strategiyası və böyümə.', approved: false, owner: 'demo' }
+      ];
+      saveAll(seed);
+    }
+    function fmtDate(d){ return new Date(d).toLocaleDateString('az-AZ'); }
+
+    function card(ev, actions){
+      return `
+        <article class="event" style="display:grid; grid-template-columns: 160px 1fr auto; gap:12px; padding:12px;">
+          <img src="${ev.image}" alt="${ev.name}" style="width:160px; height:100px; object-fit:cover; border-radius:10px; border:1px solid var(--border);"/>
+          <div style="display:grid; gap:4px;">
+            <strong>${ev.name}</strong>
+            <span style="color:var(--muted)">${fmtDate(ev.date)} • ${ev.location}</span>
+            <span>${ev.price > 0 ? ev.price + ' AZN' : 'Pulsuz'}</span>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            ${actions}
+          </div>
+        </article>`;
+    }
+
+    function render(){
+      document.getElementById('year').textContent = new Date().getFullYear();
+      ensureSeed();
+      const all = getAll();
+      const pending = all.filter(e => !e.approved);
+      const approved = all.filter(e => e.approved);
+
+      const pendingList = document.getElementById('pendingList');
+      const approvedList = document.getElementById('approvedList');
+      pendingList.innerHTML = pending.length ? pending.map(ev => card(ev, `
+        <button class="btn" data-action="approve" data-id="${ev.id}">Təsdiqlə</button>
+        <button class="btn ghost" data-action="delete" data-id="${ev.id}">Sil</button>
+      `)).join('') : '<p style="color:var(--muted); margin:0;">Gözləyən tədbir yoxdur.</p>';
+
+      approvedList.innerHTML = approved.length ? approved.map(ev => card(ev, `
+        <a class="btn small" href="event?id=${ev.id}">Bax</a>
+        <button class="btn ghost" data-action="delete" data-id="${ev.id}">Sil</button>
+      `)).join('') : '<p style="color:var(--muted); margin:0;">Təsdiqlənmiş tədbir yoxdur.</p>';
+    }
+
+
+    });
+
+    render();
+  </script>
+</body>
+</html>
+
+

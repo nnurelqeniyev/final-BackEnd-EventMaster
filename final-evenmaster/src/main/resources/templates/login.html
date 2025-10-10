@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EventMaster — Giriş</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/front/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="EventMaster ana səhifə">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>EventMaster</span>
+      </a>
+      <nav class="nav">
+        <a href="/register">Qeydiyyat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container" style="max-width: 420px; text-align: left;">
+        <h1 style="margin-bottom: 12px;">Giriş</h1>
+        <p class="lead" style="margin-bottom: 18px;">Hesabınıza daxil olun.</p>
+        <form  method="post" action="/login" class="card" id="login-form" style="display: grid; gap: 12px; padding: 18px;">
+          <label>
+            <span class="sr-only">E-poçt</span>
+            <input type="email" name="username" placeholder="E-poçt" required style="width: 100%; padding: 12px; border-radius: 10px; background: #161822; border: 1px solid var(--border); color: var(--text);" />
+          </label>
+          <label>
+            <span class="sr-only">Şifrə</span>
+            <input type="password" name="password" placeholder="Şifrə" required minlength="6" style="width: 100%; padding: 12px; border-radius: 10px; background: #161822; border: 1px solid var(--border); color: var(--text);" />
+          </label>
+          <button class="btn primary" type="submit">Daxil ol</button>
+          <p style="color: var(--muted); margin: 0;">Hesabın yoxdur? <a href="/register">Qeydiyyatdan keç</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> EventMaster.</p>
+      <nav class="footer-nav">
+        <a href="/contact">Əlaqə</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Simple year fill and demo submit
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+

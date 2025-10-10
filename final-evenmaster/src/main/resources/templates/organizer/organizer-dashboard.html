@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Organizer Paneli</title>
+    <link rel="stylesheet" href="/front/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <h1>Salam, <span th:text="${organizerName}">Təşkilatçı</span>!</h1>
+        <nav>
+            <a href="/events/create">Tədbir yarat</a>
+            <a href="/logout">Çıxış</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h2>Sənin tədbirlərin</h2>
+    <div th:if="${events.size() == 0}">
+        <p>Hələ heç bir tədbir yaratmamısan.</p>
+    </div>
+
+    <div th:each="event : ${events}" class="event-card">
+        <h3 th:text="${event.title}">Başlıq</h3>
+        <p th:text="${event.description}">Təsvir</p>
+        <p><strong>Məkan:</strong> <span th:text="${event.location}">Bakı</span></p>
+        <span th:text="${#dates.format(event.dateLine, 'dd.MM.yyyy')}">        <p><strong>Status:</strong> <span th:text="${event.status}">Aktiv</span></p>
+
+        <div style="margin-top:10px;">
+            <a th:href="@{'/events/edit/' + ${event.id}}" class="btn">Dəyiş</a>
+            <form th:action="@{'/events/delete/' + ${event.id}}" method="post" style="display:inline;">
+              <button type="submit" class="btn danger">Sil</button>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>
