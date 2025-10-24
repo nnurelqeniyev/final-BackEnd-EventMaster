@@ -1,11 +1,13 @@
 package az.edu.itbrains.final_evenmaster.models;
 
+import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -23,9 +25,10 @@ public class Event {
     @Column(length = 700)
     private String description;
     private String location;
-    private Date dateLine;
+    private LocalDate dateLine;
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EventStatus status;
     private String image;
     private Double priceStandard;
     private Double priceVip;

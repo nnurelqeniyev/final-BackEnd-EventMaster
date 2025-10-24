@@ -1,5 +1,6 @@
 package az.edu.itbrains.final_evenmaster.controllers;
 
+import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import org.springframework.ui.Model;
@@ -32,22 +33,13 @@ public class HomeController {
     }
     @GetMapping("/events")
     public String events(Model model){
-        List<Event> events = eventRepository.findByStatus("approved");
+        List<Event> events = eventRepository.findByStatus(EventStatus.APPROVED); // ✅ Enum göndər
         model.addAttribute("events", events);
-
         return "events";
     }
     @GetMapping("/contact")
     public String contact(){
         return "contact.html";
-    }
-    @GetMapping("/organizer")
-    public String organizer(){
-        return "create-event.html";
-    }
-    @GetMapping("/admin")
-    public String admin(){
-        return "admin.html";
     }
     @GetMapping("/login")
     public String login(){

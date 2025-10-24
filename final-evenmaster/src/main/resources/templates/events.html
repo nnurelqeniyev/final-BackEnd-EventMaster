@@ -52,18 +52,16 @@
 
           <div class="event-list">
               <article class="event" th:each="ev : ${events}">
-                  <a th:href="@{'/event?id=' + ${ev.id}}" style="text-decoration:none; color:inherit; display:block;">
+                  <a th:href="@{'/events/event?id=' + ${ev.id}}" style="text-decoration:none; color:inherit; display:block;">
                       <div class="event-media">
                           <img th:src="${ev.image}" th:alt="${ev.title}" loading="lazy" />
-                          <span class="badge" th:text="${#dates.format(ev.dateLine, 'dd.MM.yyyy')}"></span>
-                      </div>
+                          <span th:text="${#temporals.format(ev.dateLine, 'dd.MM.yyyy')}"></span>                      </div>
                       <div class="event-body">
                           <h4 th:text="${ev.title}"></h4>
                           <p th:text="${ev.location}"></p>
                           <div class="event-meta">
                               <span class="price" th:text="${ev.priceStandard > 0 ? ev.priceStandard + ' AZN' : 'Pulsuz'}"></span>
-                              <a class="btn small" th:href="@{'/event?id=' + ${ev.id}}">Daha çox</a>
-                          </div>
+                              <a class="btn small" th:href="@{'/events/event?id=' + ${ev.id}}">Daha çox</a>                          </div>
                       </div>
                   </a>
               </article>
@@ -82,7 +80,7 @@
     </div>
   </footer>
 
-  <script>git
+  <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>

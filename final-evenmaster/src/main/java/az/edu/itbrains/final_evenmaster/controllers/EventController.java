@@ -1,6 +1,7 @@
 package az.edu.itbrains.final_evenmaster.controllers;
 
 import az.edu.itbrains.final_evenmaster.dtos.event.EventDto;
+import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.models.Event;
 import az.edu.itbrains.final_evenmaster.models.User;
 import az.edu.itbrains.final_evenmaster.repositories.CompanyRepository;
@@ -34,12 +35,17 @@ public class EventController {
         model.addAttribute("organizer", organizer);
         return "organizer/create-event";
     }
-
+    @GetMapping("/event")
+    public String showEvent(@RequestParam Long id, Model model) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        model.addAttribute("event", event);
+        return "event";
+    }
     @PostMapping("/create")
     @PreAuthorize("hasRole('ORGANIZER')")
     public String createEvent(@ModelAttribute EventDto eventDto, Principal principal) {
         User organizer = userRepository.findByEmail(principal.getName()).orElseThrow();
-        eventService.createEvent(eventDto, organizer);
+        eventService.createEvent(eventDto, principal);
         return "redirect:/organizer/dashboard";
     }
     @PostMapping("/delete/{id}")
@@ -50,22 +56,21 @@ public class EventController {
     }
     @PostMapping("/edit/{id}")
     public String updateEvent(@PathVariable Long id, @ModelAttribute EventDto dto, Principal principal) {
-        eventService.updateEvent(dto, id, principal);
+        eventService.updateEvent(id, dto, principal);
         return "redirect:/organizer/dashboard";
     }
     @GetMapping("/admin/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public String getPendingEvents(Model model) {
-        List<Event> pendingEvents = eventRepository.findByStatus("pending");
+        List<Event> pendingEvents = eventRepository.findByStatus(EventStatus.PENDING); // ✅ Enum göndər
         model.addAttribute("events", pendingEvents);
         return "admin/admin-events";
     }
-
     @PostMapping("/admin/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public String approveEvent(@PathVariable Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
-        event.setStatus("approved");
+        event.setStatus(EventStatus.APPROVED);
         eventRepository.save(event);
         return "redirect:/events/admin/pending";
     }

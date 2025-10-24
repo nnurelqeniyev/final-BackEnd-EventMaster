@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -22,6 +24,10 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
+    @GetMapping("/register")
+    public String register(){
+        return "register.html";
+    }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDto userDto, Model model) {
@@ -30,14 +36,14 @@ public class UserController {
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        String roleName = "ROLE_" + userDto.getRole().toUpperCase();
+        String roleName = "ROLE_" + userDto.getRole().getName().toUpperCase();
         Role role = roleRepository.findByName(roleName);
+        user.setRoles(List.of(role));
         if (role == null) {
             throw new IllegalArgumentException("Belə rol mövcud deyil: " + roleName);
         }
         user.getRoles().add(role);
-
-        if (userDto.getRole().equalsIgnoreCase("organizer")) {
+        if (userDto.getRole().getName().equalsIgnoreCase("ROLE_ORGANIZER")) {
             Company company = new Company();
             company.setName(user.getFullName());
             company.setDescription("Avtomatik yaradılıb");

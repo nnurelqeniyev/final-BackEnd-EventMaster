@@ -25,7 +25,8 @@
         <a href="/contact">Əlaqə</a>
           <a sec:authorize="hasRole('ORGANIZER')" href="/events/create">Təşkilatçı</a>
           <a  sec:authorize="hasRole('ADMIN')" href="/admin">Admin</a>
-        <a  class="btn ghost" href="/login">Giriş</a>
+          <a sec:authorize="hasRole('ORGANIZER')" href="/organizer/dashboard">Təşkilatçı</a>
+          <a  class="btn ghost" href="/login">Giriş</a>
         <a class="btn ghost" href="/register">Qeydiyyat</a>
         <a class="btn primary" href="/events">Başla</a>
       </nav>
