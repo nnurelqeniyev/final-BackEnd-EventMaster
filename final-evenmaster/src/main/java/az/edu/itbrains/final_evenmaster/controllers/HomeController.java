@@ -13,11 +13,7 @@ import az.edu.itbrains.final_evenmaster.models.Event;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
-    private final EventService eventService;
-    private final EventRepository eventRepository;
-
 
     @GetMapping("/")
     public String index(){
@@ -30,12 +26,6 @@ public class HomeController {
     @GetMapping("/event")
     public String event(){
         return "event.html";
-    }
-    @GetMapping("/events")
-    public String events(Model model){
-        List<Event> events = eventRepository.findByStatus(EventStatus.APPROVED); // ✅ Enum göndər
-        model.addAttribute("events", events);
-        return "events";
     }
     @GetMapping("/contact")
     public String contact(){

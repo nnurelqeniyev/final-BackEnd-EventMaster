@@ -8,9 +8,11 @@ import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import az.edu.itbrains.final_evenmaster.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service

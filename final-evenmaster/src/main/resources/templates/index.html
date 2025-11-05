@@ -81,7 +81,7 @@
               </div>
             <h4>Tech Summit Bakı 2025</h4>
             <p>12 Noyabr • Bakı Konqres Mərkəzi</p>
-            <button class="btn small">Bilet al</button>
+            <a href="/events" class="btn small">Bilet al</a>
           </article>
           <article class="event">
               <div class="event-media">
@@ -89,7 +89,7 @@
               </div>
             <h4>Indie Musiqi Gecəsi</h4>
             <p>25 Oktyabr • Onlayn Konsert</p>
-            <button class="btn small">Bilet al</button>
+            <a href="/events" class="btn small">Bilet al</a>
           </article>
           <article class="event">
               <div class="event-media">
@@ -97,13 +97,13 @@
               </div>
             <h4>Startap Həftəsi</h4>
             <p>3-7 Dekabr • SUP Accelerators</p>
-            <button class="btn small">Bilet al</button>
+            <a href="/events" class="btn small">Bilet al</a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="cta">
+    <section sec:authorize="hasRole('ORGANIZER')"  class="cta">
       <div class="container cta-inner">
         <h2>Öz tədbirini indi yarat</h2>
         <p>EventMaster ilə bir neçə dəqiqəyə tədbir səhifəni tərtib et və paylaş.</p>

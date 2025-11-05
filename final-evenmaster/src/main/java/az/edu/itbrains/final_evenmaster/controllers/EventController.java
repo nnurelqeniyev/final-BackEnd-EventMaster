@@ -9,12 +9,15 @@ import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
 import az.edu.itbrains.final_evenmaster.repositories.UserRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -74,4 +77,11 @@ public class EventController {
         eventRepository.save(event);
         return "redirect:/events/admin/pending";
     }
+    @GetMapping
+    public String showEvents(Model model) {
+        List<Event> events = eventRepository.findByStatus(EventStatus.APPROVED);
+        model.addAttribute("events", events);
+        return "events";
+    }
+
 }
