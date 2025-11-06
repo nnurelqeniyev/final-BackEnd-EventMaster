@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<html lang="az" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -283,7 +283,7 @@
         <nav class="nav">
             <a th:href="@{/features}" aria-current="page">Xüsusiyyətlər</a>
             <a th:href="@{/events}">Tədbirlər</a>
-            <a th:href="@{/organizer/dashboard}">Təşkilatçı</a>
+            <a sec:authorize="hasRole('ORGANIZER')" th:href="@{/organizer/dashboard}">Təşkilatçı</a>
 
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a th:href="@{/login}">Giriş</a>
