@@ -1,6 +1,7 @@
 package az.edu.itbrains.final_evenmaster.controllers;
 
 import az.edu.itbrains.final_evenmaster.dtos.event.EventDto;
+import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.models.Event;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import az.edu.itbrains.final_evenmaster.services.UserService;
@@ -50,11 +51,12 @@ public class OrganizerController {
         }
         model.addAttribute("eventDto", eventService.toDto(event));
         model.addAttribute("eventId", id);
-        return "edit-event";
+        return "organizer/edit-event";
     }
 
     @PostMapping("/edit/{id}")
     public String updateEvent(@PathVariable Long id, @ModelAttribute EventDto eventDto, Principal principal) {
+        eventDto.setStatus(EventStatus.PENDING);
         eventService.updateEvent(id, eventDto, principal);
         return "redirect:/organizer/dashboard";
     }

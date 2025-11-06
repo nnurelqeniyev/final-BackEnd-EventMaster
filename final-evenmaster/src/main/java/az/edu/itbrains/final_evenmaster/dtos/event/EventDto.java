@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,7 +19,7 @@ public class EventDto {
     private String title;
     private String description;
     private String location;
-    private LocalDate dateLine;
+    private LocalDateTime dateLine;
     private EventStatus status;
     private String image;
     private Double priceStandard;

@@ -59,6 +59,7 @@ public class EventController {
     }
     @PostMapping("/edit/{id}")
     public String updateEvent(@PathVariable Long id, @ModelAttribute EventDto dto, Principal principal) {
+        dto.setStatus(EventStatus.PENDING);
         eventService.updateEvent(id, dto, principal);
         return "redirect:/organizer/dashboard";
     }

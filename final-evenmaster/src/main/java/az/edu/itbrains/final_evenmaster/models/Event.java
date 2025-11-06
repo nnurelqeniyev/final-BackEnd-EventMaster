@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -25,7 +26,7 @@ public class Event {
     @Column(length = 700)
     private String description;
     private String location;
-    private LocalDate dateLine;
+    private LocalDateTime dateLine;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EventStatus status;

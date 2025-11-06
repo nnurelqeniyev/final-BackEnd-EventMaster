@@ -52,6 +52,7 @@ public class EventServiceImpl implements EventService {
         event.setPriceStandard(dto.getPriceStandard());
         event.setPriceVip(dto.getPriceVip());
         event.setImage(dto.getImage());
+        event.setStatus(dto.getStatus());
         eventRepository.save(event);
     }
 
@@ -59,7 +60,7 @@ public class EventServiceImpl implements EventService {
     public void deleteEvent(Long id, Principal principal) {
         User organizer = userService.getCurrentUser(principal);
         Event event = eventRepository.findById(id).orElseThrow();
-        if (event.getOrganizer().getId().equals(organizer.getId())) { // ✅ düzəliş
+        if (event.getOrganizer().getId().equals(organizer.getId())) {
             eventRepository.deleteById(id);
         }
     }
