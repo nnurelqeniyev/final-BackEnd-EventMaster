@@ -6,6 +6,37 @@
     <title>EventMaster — Tədbirlər Kataloqu</title>
     <link rel="stylesheet" href="/front/styles.css" />
     <style>
+        body {
+          background:
+            radial-gradient(ellipse 1400px 800px at 15% -5%, rgba(108,92,231,0.35), transparent 50%),
+            radial-gradient(ellipse 1200px 700px at 85% 10%, rgba(0,209,178,0.25), transparent 55%),
+            radial-gradient(ellipse 1000px 600px at 50% 90%, rgba(108,92,231,0.15), transparent 50%),
+            radial-gradient(ellipse 800px 500px at 0% 50%, rgba(0,209,178,0.12), transparent 45%),
+            linear-gradient(135deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,1) 100%),
+            var(--bg, #0b0c10);
+          background-attachment: fixed;
+          background-repeat: no-repeat;
+          background-size: cover;
+          min-height: 100vh;
+          position: relative;
+        }
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background:
+            radial-gradient(circle 600px at 30% 20%, rgba(108,92,231,0.08), transparent 70%),
+            radial-gradient(circle 500px at 70% 80%, rgba(0,209,178,0.06), transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        body > * {
+          position: relative;
+          z-index: 1;
+        }
         .event-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         @media (max-width: 900px) { .event-list { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 620px) { .event-list { grid-template-columns: 1fr; } }
@@ -16,6 +47,18 @@
         .event .event-body { padding: 14px; display: grid; gap: 6px; }
         .event .event-meta { display: flex; align-items: center; justify-content: space-between; }
         .event .price { font-weight: 600; }
+        .eee{
+            text-decoration: none;
+            color: white;
+        }
+        .rrr{
+            text-decoration: none;
+            color: white;
+        }
+        .ttt{
+            text-decoration: none;
+            color: white;
+        }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,25 +107,58 @@
             <div id="resultsCount" style="color: var(--muted); margin: 8px 0 16px;"></div>
 
             <div class="event-list" id="eventList">
-                <div th:if="${events != null and !#lists.isEmpty(events)}">
-                    <article class="event" th:each="ev : ${events}">
-                        <a th:href="@{/events/event(id=${ev.id})}" style="text-decoration:none; color:inherit; display:block;" th:attr="data-event-id=${ev.id}">
+                <div th:if="${eventPage != null and !#lists.isEmpty(eventPage.content)}">
+                    <article class="event" th:each="ev : ${eventPage.content}">
+                        <a th:href="@{/events/event(id=${ev.id})}"
+                           style="text-decoration:none; color:inherit; display:block;"
+                           th:attr="data-event-id=${ev.id}">
                             <div class="event-media">
-                                <img th:src="${ev.image != null ? ev.image : '/front/placeholder.jpg'}" th:alt="${ev.title != null ? ev.title : '—'}" loading="lazy" />
-                                <span class="badge" th:text="${ev.dateLine != null ? #temporals.format(ev.dateLine, 'dd.MM.yyyy') : ''}"></span>
+                                <img th:src="${ev.image != null ? ev.image : '/front/placeholder.jpg'}"
+                                     th:alt="${ev.title != null ? ev.title : '—'}" loading="lazy" />
+                                <span class="badge"
+                                      th:text="${ev.dateLine != null ? #temporals.format(ev.dateLine, 'dd.MM.yyyy') : ''}"></span>
                             </div>
                             <div class="event-body">
-                                <h4 th:text="${ev.title != null ? ev.title : ev.name}">Title</h4>
+                                <h4 th:text="${ev.title != null ? ev.title : '—'}">Title</h4>
                                 <p th:text="${ev.location != null ? ev.location : '—'}">Location</p>
+
+                                <!-- ⭐ Ortalama reytinq -->
+                                <div class="rating"
+                                     th:if="${ev.reviewCount != null and ev.reviewCount > 0}"
+                                     style="margin: 6px 0; font-size: 14px; color: #f5b50a;">
+                        <span th:text="'⭐ ' + ${#numbers.formatDecimal(ev.averageRating, 1, 1)} + ' (' + ${ev.reviewCount} + ' rəy)'">
+                            ⭐ 4.5 (12 rəy)
+                        </span>
+                                </div>
+
                                 <div class="event-meta">
-                                    <span class="price" th:text="${ev.priceStandard != null and ev.priceStandard > 0 ? ev.priceStandard + ' AZN' : 'Pulsuz'}">Price</span>
+                        <span class="price"
+                              th:text="${ev.priceStandard != null and ev.priceStandard > 0 ? ev.priceStandard + ' AZN' : 'Pulsuz'}">Price</span>
                                     <a class="btn small" th:href="@{/events/event(id=${ev.id})}">Daha çox</a>
                                 </div>
                             </div>
                         </a>
                     </article>
                 </div>
-                <p th:if="${events == null or #lists.isEmpty(events)}" style="color:var(--muted);">Heç bir nəticə tapılmadı.</p>
+
+                <p th:if="${eventPage == null or #lists.isEmpty(eventPage.content)}" style="color:var(--muted);">
+                    Heç bir nəticə tapılmadı.
+                </p>
+            </div>
+
+            <div class="pagination" th:if="${totalPages > 1}">
+                <ul>
+                    <li th:if="${currentPage > 0}">
+                        <a class="eee" th:href="@{/events(page=${currentPage - 1})}">← Əvvəlki</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="rrr" th:href="@{/events(page=${i})}" th:text="${i + 1}">1</a>
+                    </li>
+                    <li th:if="${currentPage < totalPages - 1}">
+                        <a class="ttt" th:href="@{/events(page=${currentPage + 1})}">Sonrakı →</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
@@ -96,7 +172,6 @@
         </nav>
     </div>
 </footer>
-
 <script>
     function parseBadgeDate(text){
       // Supports dd.MM.yyyy and locale dates
@@ -204,5 +279,3 @@
 </script>
 </body>
 </html>
-
-

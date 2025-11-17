@@ -1,5 +1,6 @@
 package az.edu.itbrains.final_evenmaster.controllers;
 
+import az.edu.itbrains.final_evenmaster.dtos.ReviewDto;
 import az.edu.itbrains.final_evenmaster.dtos.event.EventDto;
 import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.models.Event;
@@ -8,16 +9,18 @@ import az.edu.itbrains.final_evenmaster.repositories.CompanyRepository;
 import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
 import az.edu.itbrains.final_evenmaster.repositories.UserRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
+import az.edu.itbrains.final_evenmaster.services.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -26,10 +29,10 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final ReviewService reviewService;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
-
     @GetMapping("/create")
     @PreAuthorize("hasRole('ORGANIZER')")
     public String showCreateForm(Model model, Principal principal) {
@@ -38,16 +41,10 @@ public class EventController {
         model.addAttribute("organizer", organizer);
         return "organizer/create-event";
     }
-    @GetMapping("/event")
-    public String showEvent(@RequestParam Long id, Model model) {
-        Event event = eventRepository.findById(id).orElseThrow();
-        model.addAttribute("event", event);
-        return "event";
-    }
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('ORGANIZER')")
     public String createEvent(@ModelAttribute EventDto eventDto, Principal principal) {
-        User organizer = userRepository.findByEmail(principal.getName()).orElseThrow();
         eventService.createEvent(eventDto, principal);
         return "redirect:/organizer/dashboard";
     }
@@ -66,7 +63,7 @@ public class EventController {
     @GetMapping("/admin/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public String getPendingEvents(Model model) {
-        List<Event> pendingEvents = eventRepository.findByStatus(EventStatus.PENDING); // ✅ Enum göndər
+        List<Event> pendingEvents = eventRepository.findByStatus(EventStatus.PENDING);
         model.addAttribute("events", pendingEvents);
         return "admin/admin-events";
     }
@@ -79,10 +76,27 @@ public class EventController {
         return "redirect:/events/admin/pending";
     }
     @GetMapping
-    public String showEvents(Model model) {
-        List<Event> events = eventRepository.findByStatus(EventStatus.APPROVED);
-        model.addAttribute("events", events);
+    public String showEvents(@RequestParam(defaultValue = "0") int page, Model model) {
+        Pageable pageable = PageRequest.of(page, 30, Sort.by("dateLine").descending());
+        Page<EventDto> eventPage = eventService.getApprovedEventDtos(pageable);
+
+        model.addAttribute("eventPage", eventPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", eventPage.getTotalPages());
+
         return "events";
     }
+    @GetMapping("/event")
+    public String eventPage(@RequestParam Long id, Model model, Principal principal) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        List<ReviewDto> reviewDTOs = reviewService.getReviewDTOs(id, principal);
+        //1 rey en cox
+        boolean hasReviewed = reviewService.hasUserReviewedEvent(id, principal);
 
+        model.addAttribute("event", event);
+        model.addAttribute("reviewDTOs", reviewDTOs);
+        //1 rey en cox
+        model.addAttribute("hasReviewed", hasReviewed);
+        return "event";
+    }
 }

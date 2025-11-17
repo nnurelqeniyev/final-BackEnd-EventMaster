@@ -9,6 +9,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+    body {
+background:
+radial-gradient(ellipse 1400px 800px at 15% -5%, rgba(108,92,231,0.35), transparent 50%),
+radial-gradient(ellipse 1200px 700px at 85% 10%, rgba(0,209,178,0.25), transparent 55%),
+radial-gradient(ellipse 1000px 600px at 50% 90%, rgba(108,92,231,0.15), transparent 50%),
+radial-gradient(ellipse 800px 500px at 0% 50%, rgba(0,209,178,0.12), transparent 45%),
+linear-gradient(135deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,1) 100%),
+var(--bg, #0b0c10);
+background-attachment: fixed;
+background-repeat: no-repeat;
+background-size: cover;
+min-height: 100vh;
+position: relative;
+}
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background:
+radial-gradient(circle 600px at 30% 20%, rgba(108,92,231,0.08), transparent 70%),
+radial-gradient(circle 500px at 70% 80%, rgba(0,209,178,0.06), transparent 70%);
+pointer-events: none;
+z-index: 0;
+}
+body > * {
+position: relative;
+z-index: 1;
+}
         .edit-form-section {
           padding: 48px 0;
         }

@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -24,38 +23,40 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
+
     @GetMapping("/register")
-    public String register(){
-        return "register.html";
+    public String register(Model model) {
+        model.addAttribute("userDto", new UserDto());
+        return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDto userDto, Model model) {
-        User user = new User();
-        user.setFullName(userDto.getFullName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        String roleName = "ROLE_" + userDto.getRole().getName().toUpperCase();
-        Role role = roleRepository.findByName(roleName);
-        user.setRoles(List.of(role));
-        if (role == null) {
-            throw new IllegalArgumentException("Belə rol mövcud deyil: " + roleName);
-        }
-        user.getRoles().add(role);
-        if (userDto.getRole().getName().equalsIgnoreCase("ROLE_ORGANIZER")) {
-            Company company = new Company();
-            company.setName(user.getFullName());
-            company.setDescription("Avtomatik yaradılıb");
-            companyRepository.save(company);
-
-            user.setCompany(company);
-        }
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             model.addAttribute("emailError", "Bu email artıq istifadə olunub.");
             return "register";
         }
 
+        String roleName = "ROLE_" + userDto.getRole().toUpperCase(); // "organizer" → "ROLE_ORGANIZER"
+        Role role = roleRepository.findByName(roleName);
+        if (role == null) {
+            model.addAttribute("roleError", "Belə rol mövcud deyil: " + roleName);
+            return "register";
+        }
+
+        User user = new User();
+        user.setFullName(userDto.getFullName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRoles(List.of(role));
+
+        if (roleName.equals("ROLE_ORGANIZER")) {
+            Company company = new Company();
+            company.setName(user.getFullName());
+            company.setDescription("Avtomatik yaradılıb");
+            companyRepository.save(company);
+            user.setCompany(company);
+        }
 
         userRepository.save(user);
         return "redirect:/login";

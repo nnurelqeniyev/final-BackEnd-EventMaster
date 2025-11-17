@@ -3,11 +3,16 @@ package az.edu.itbrains.final_evenmaster.services.impls;
 import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.dtos.event.EventDto;
 import az.edu.itbrains.final_evenmaster.models.Event;
+import az.edu.itbrains.final_evenmaster.models.Review;
 import az.edu.itbrains.final_evenmaster.models.User;
 import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
+import az.edu.itbrains.final_evenmaster.repositories.ReviewRepository;
+import az.edu.itbrains.final_evenmaster.repositories.UserRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import az.edu.itbrains.final_evenmaster.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,7 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
 
     @Override
@@ -43,7 +49,7 @@ public class EventServiceImpl implements EventService {
     public void updateEvent(Long id, EventDto dto, Principal principal) {
         User organizer = userService.getCurrentUser(principal);
         Event event = eventRepository.findById(id).orElseThrow();
-        if (!event.getOrganizer().getId().equals(organizer.getId())) return; // ✅ düzəliş
+        if (!event.getOrganizer().getId().equals(organizer.getId())) return;
 
         event.setTitle(dto.getTitle());
         event.setDescription(dto.getDescription());
@@ -67,6 +73,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto toDto(Event event) {
         EventDto dto = new EventDto();
+        dto.setId(event.getId());
         dto.setTitle(event.getTitle());
         dto.setDescription(event.getDescription());
         dto.setLocation(event.getLocation());
@@ -74,6 +81,13 @@ public class EventServiceImpl implements EventService {
         dto.setPriceStandard(event.getPriceStandard());
         dto.setPriceVip(event.getPriceVip());
         dto.setImage(event.getImage());
+        dto.setStatus(event.getStatus());
+
+        List<Review> reviews = event.getReviews();
+        double avg = reviews.stream().mapToInt(Review::getRating).average().orElse(0);
+        dto.setAverageRating(avg);
+        dto.setReviewCount(reviews.size());
+
         return dto;
     }
 
@@ -88,4 +102,30 @@ public class EventServiceImpl implements EventService {
     public Event getEventById(Long id) {
         return eventRepository.findById(id).orElseThrow();
     }
+    public EventDto getEventDtoById(Long id) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        EventDto dto = new EventDto();
+
+        dto.setId(event.getId());
+        dto.setTitle(event.getTitle());
+        dto.setLocation(event.getLocation());
+        dto.setImage(event.getImage());
+        dto.setDateLine(event.getDateLine());
+        dto.setPriceStandard(event.getPriceStandard());
+        dto.setStatus(event.getStatus());
+
+        List<Review> reviews = event.getReviews();
+        double avg = reviews.stream().mapToInt(Review::getRating).average().orElse(0);
+        dto.setAverageRating(avg);
+        dto.setReviewCount(reviews.size());
+
+        return dto;
+    }
+    @Override
+    public Page<EventDto> getApprovedEventDtos(Pageable pageable) {
+        Page<Event> events = eventRepository.findByStatus(EventStatus.APPROVED, pageable);
+        return events.map(this::toDto);
+    }
+
+
 }

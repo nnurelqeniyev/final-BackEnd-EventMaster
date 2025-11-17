@@ -16,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDto {
+    private Long id;
     private String title;
     private String description;
     private String location;
@@ -24,4 +25,7 @@ public class EventDto {
     private String image;
     private Double priceStandard;
     private Double priceVip;
+    private Double averageRating;
+    private Integer reviewCount;
+
 }

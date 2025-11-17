@@ -8,6 +8,39 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/front/styles.css" />
+    <style>
+        body {
+  background:
+    radial-gradient(ellipse 1400px 800px at 15% -5%, rgba(108,92,231,0.35), transparent 50%),
+    radial-gradient(ellipse 1200px 700px at 85% 10%, rgba(0,209,178,0.25), transparent 55%),
+    radial-gradient(ellipse 1000px 600px at 50% 90%, rgba(108,92,231,0.15), transparent 50%),
+    radial-gradient(ellipse 800px 500px at 0% 50%, rgba(0,209,178,0.12), transparent 45%),
+    linear-gradient(135deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,1) 100%),
+    var(--bg, #0b0c10);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle 600px at 30% 20%, rgba(108,92,231,0.08), transparent 70%),
+    radial-gradient(circle 500px at 70% 80%, rgba(0,209,178,0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body > * {
+  position: relative;
+  z-index: 1;
+}
+    </style>
 </head>
 <body>
   <header class="site-header">
@@ -82,7 +115,65 @@
                       <button class="btn primary" style="margin-top: 12px; width: 100%;">Bileti al</button>
                   </aside>
               </div>
-          </div>
+              <section class="card" style="grid-column: 1 / -1; margin-top: 16px;">
+                  <h3 style="margin:0 0 16px;">Rəylər</h3>
+
+                  <div id="reviewsContainer" style="display: grid; gap: 16px; margin-bottom: 20px;">
+                      <div th:each="r : ${reviewDTOs}" style="background: #161822; border: 1px solid var(--border); border-radius: 10px; padding: 12px;">
+                          <p style="margin: 0 0 4px;">
+                              <strong th:text="${r.userName}">İstifadəçi</strong> —
+                              <span th:text="${r.rating}">5</span> ⭐
+
+                              <a th:if="${r.editable or #authorization.expression('hasRole(''ADMIN'')')}"
+                                 th:href="@{/reviews/edit(id=${r.id})}"
+                                 style="color: #f5b50a; margin-left: 12px; font-weight: bold; text-decoration: none;">✎</a>
+
+                          <form th:if="${r.editable or #authorization.expression('hasRole(''ADMIN'')')}"
+                                th:action="@{/reviews/delete}" method="post" style="display:inline;">
+                              <input type="hidden" name="id" th:value="${r.id}" />
+                              <input type="hidden" name="eventId" th:value="${event.id}" />
+                              <button type="submit"
+                                      style="background:none; border:none; color:red; font-weight:bold; cursor:pointer; padding:0; margin-left:12px;">✖</button>
+                          </form>
+                          </p>
+                          <p th:text="${r.comment}" style="margin: 0; color: var(--text); font-size: 14px;">Rəy mətni</p>
+                      </div>
+                  </div>
+
+                  <div th:if="${not hasReviewed}">
+                      <form th:action="@{/reviews/add}" method="post"
+                            style="background: rgba(18,20,26,0.5); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: grid; gap: 12px;">
+                          <h4 style="margin: 0 0 8px; font-size: 16px;">Rəy yazın</h4>
+
+                          <input type="hidden" name="eventId" th:value="${event.id}" />
+
+                          <div>
+                              <label style="display: block; margin-bottom: 6px; color: var(--muted); font-size: 14px;">Qiymətləndirmə</label>
+                              <div id="starRating" style="display: flex; gap: 4px; cursor: pointer;">
+                                  <span class="star" data-rating="1" style="font-size: 24px; color: #444;">★</span>
+                                  <span class="star" data-rating="2" style="font-size: 24px; color: #444;">★</span>
+                                  <span class="star" data-rating="3" style="font-size: 24px; color: #444;">★</span>
+                                  <span class="star" data-rating="4" style="font-size: 24px; color: #444;">★</span>
+                                  <span class="star" data-rating="5" style="font-size: 24px; color: #444;">★</span>
+                              </div>
+                              <input type="hidden" name="rating" id="reviewRating" value="0" required />
+                          </div>
+
+                          <div>
+                              <label style="display: block; margin-bottom: 6px; color: var(--muted); font-size: 14px;">Rəy</label>
+                              <textarea name="comment" required rows="4"
+                                        style="width: 100%; background: #161822; border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 10px; font-size: 14px; font-family: inherit; resize: vertical;"
+                                        placeholder="Rəyinizi yazın..."></textarea>
+                          </div>
+
+                          <button type="submit" class="btn primary" style="width: 100%;">Rəy göndər</button>
+                      </form>
+                  </div>
+
+                  <div th:if="${hasReviewed}">
+                      <p style="color: #f5b50a; font-weight: bold;">Bu tədbirə artıq rəy yazmısınız.</p>
+                  </div>
+              </section>          </div>
       </section>
   </main>
 
@@ -98,5 +189,16 @@
 
 </body>
 </html>
+<script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('reviewRating');
 
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        const rating = star.getAttribute('data-rating');
+        ratingInput.value = rating;
+        stars.forEach(s => s.style.color = +s.getAttribute('data-rating') <= rating ? '#f5b50a' : '#444');
+      });
+    });
+</script>
 
