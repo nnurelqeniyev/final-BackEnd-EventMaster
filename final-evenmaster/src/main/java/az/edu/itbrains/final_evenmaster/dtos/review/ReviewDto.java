@@ -1,4 +1,4 @@
-package az.edu.itbrains.final_evenmaster.dtos;
+package az.edu.itbrains.final_evenmaster.dtos.review;
 
 import lombok.Data;
 

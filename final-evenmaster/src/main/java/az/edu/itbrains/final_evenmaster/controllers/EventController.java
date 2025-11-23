@@ -1,6 +1,6 @@
 package az.edu.itbrains.final_evenmaster.controllers;
 
-import az.edu.itbrains.final_evenmaster.dtos.ReviewDto;
+import az.edu.itbrains.final_evenmaster.dtos.review.ReviewDto;
 import az.edu.itbrains.final_evenmaster.dtos.event.EventDto;
 import az.edu.itbrains.final_evenmaster.enums.EventStatus;
 import az.edu.itbrains.final_evenmaster.models.Event;
@@ -71,7 +71,7 @@ public class EventController {
     @PreAuthorize("hasRole('ADMIN')")
     public String approveEvent(@PathVariable Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
-        event.setStatus(EventStatus.APPROVED);
+        event.setStatus(EventStatus.approved);
         eventRepository.save(event);
         return "redirect:/events/admin/pending";
     }

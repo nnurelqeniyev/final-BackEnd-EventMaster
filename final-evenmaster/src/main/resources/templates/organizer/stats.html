@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="az" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gəlir Statistikaları</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/front/styles.css">
+    <style>
+        :root {
+  --vip-color: #7c3aed;
+  --normal-color: #14b8a6;
+  --bg: #0b0c10;
+  --card: #12141a;
+  --text: #e6e8ee;
+  --muted: #a6adbb;
+  --border: #22252e;
+}
+
+body.stats-page {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(108, 92, 231, 0.25), transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, rgba(0, 209, 178, 0.15), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body.stats-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.1), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(20, 184, 166, 0.1), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: backgroundShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes backgroundShift {
+  0% { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.page-shell {
+  width: min(1200px, 100%);
+  position: relative;
+  z-index: 1;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-header h1 {
+  font-size: clamp(1.8rem, 2.4vw, 2.6rem);
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--vip-color), var(--normal-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.0));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out backwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  transition: left 0.5s ease;
+}
+
+.stat-card:hover::before {
+  left: 100%;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.stat-card .label {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+
+.stat-card:hover .label {
+  color: var(--text);
+}
+
+.stat-card .value {
+  margin: 8px 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text), var(--muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover .value {
+  transform: scale(1.05);
+}
+
+.chart-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  animation: fadeInUp 0.8s ease-out 0.3s backwards;
+}
+
+.chart-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.0));
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.chart-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.chart-card:hover::after {
+  opacity: 1;
+}
+
+.chart-title {
+  margin: 0 0 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+        /* Bar container */
+.bar-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 200px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+/* Normal bar */
+.bar-normal {
+  flex: 1;
+  background-color: #4a90e2;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+/* VIP bar */
+.bar-vip {
+  flex: 1;
+  background-color: #f5a623;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+/* Label */
+.bar-label {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 4px;
+  color: #333;
+}
+    </style>
+</head>
+<body class="stats-page">
+<div class="page-shell">
+    <header class="page-header">
+        <p>Yeni tədbirin performansına sürətli baxış</p>
+        <h1>Gəlir və Bilet Statistikaları</h1>
+    </header>
+    <main>
+        <section class="stat-grid">
+            <article class="stat-card">
+                <p class="label">VIP bilet sayı</p>
+                <p class="value" id="vipCount"
+                   th:attr="data-count=${summary.vipCount}"
+                   th:text="${summary.vipCount}">0</p>
+            </article>
+            <article class="stat-card">
+                <p class="label">Normal bilet sayı</p>
+                <p class="value" id="normalCount"
+                   th:attr="data-count=${summary.normalCount}"
+                   th:text="${summary.normalCount}">0</p>
+            </article>
+            <article class="stat-card">
+                <p class="label">VIP gəliri</p>
+                <p class="value" id="vipRevenue"
+                   th:attr="data-amount=${summary.vipRevenue}"
+                   th:text="${summary.vipRevenue} + ' AZN'">0 AZN</p>
+            </article>
+            <article class="stat-card">
+                <p class="label">Normal gəliri</p>
+                <p class="value" id="normalRevenue"
+                   th:attr="data-amount=${summary.normalRevenue}"
+                   th:text="${summary.normalRevenue} + ' AZN'">0 AZN</p>
+            </article>
+            <article class="stat-card">
+                <p class="label">Ümumi gəlir</p>
+                <p class="value" id="totalRevenue"
+                   th:attr="data-amount=${summary.totalRevenue}"
+                   th:text="${summary.totalRevenue} + ' AZN'">0 AZN</p>
+            </article>
+        </section>
+
+        <section class="chart-section">
+            <article class="chart-card">
+                <h2 class="chart-title">Bar diaqram · VIP vs Normal</h2>
+                <div class="bar-chart" id="ticketBars">
+                    <div class="bar vip">
+                        <div class="bar-fill" id="vipBar"></div>
+                        <div class="bar-label">
+                            <span class="bar-name">VIP</span>
+                            <span class="bar-amount" id="vipBarAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="bar normal">
+                        <div class="bar-fill" id="normalBar"></div>
+                        <div class="bar-label">
+                            <span class="bar-name">Normal</span>
+                            <span class="bar-amount" id="normalBarAmount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+<script>
+    (function () {
+      const get = (id) => document.getElementById(id);
+      const vip = Number(get("vipCount")?.dataset.count || 0);
+      const normal = Number(get("normalCount")?.dataset.count || 0);
+      const total = vip + normal;
+
+      if (total > 0) {
+        const vipPercent = (vip / total) * 100;
+        const normalPercent = 100 - vipPercent;
+
+        const vipBar = get("vipBar");
+        const normalBar = get("normalBar");
+
+        if (vipBar) vipBar.style.height = `${vipPercent}%`;
+        if (normalBar) normalBar.style.height = `${normalPercent}%`;
+
+        get("vipBarAmount").textContent = `${vip}`;
+        get("normalBarAmount").textContent = `${normal}`;
+      } else {
+        get("vipBarAmount").textContent = "0";
+        get("normalBarAmount").textContent = "0";
+      }
+    })();
+</script>
+</body>
+</html>

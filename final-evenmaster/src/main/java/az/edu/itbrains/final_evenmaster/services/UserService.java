@@ -8,4 +8,5 @@ public interface UserService {
     Long getCurrentUserId(Principal principal);
     String getName(Principal principal);
     User getCurrentUser(Principal principal);
+    User findByEmail(String email);
 }

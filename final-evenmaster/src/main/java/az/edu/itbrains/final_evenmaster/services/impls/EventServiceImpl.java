@@ -6,18 +6,15 @@ import az.edu.itbrains.final_evenmaster.models.Event;
 import az.edu.itbrains.final_evenmaster.models.Review;
 import az.edu.itbrains.final_evenmaster.models.User;
 import az.edu.itbrains.final_evenmaster.repositories.EventRepository;
-import az.edu.itbrains.final_evenmaster.repositories.ReviewRepository;
 import az.edu.itbrains.final_evenmaster.repositories.UserRepository;
 import az.edu.itbrains.final_evenmaster.services.EventService;
 import az.edu.itbrains.final_evenmaster.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -123,7 +120,7 @@ public class EventServiceImpl implements EventService {
     }
     @Override
     public Page<EventDto> getApprovedEventDtos(Pageable pageable) {
-        Page<Event> events = eventRepository.findByStatus(EventStatus.APPROVED, pageable);
+        Page<Event> events = eventRepository.findByStatus(EventStatus.approved, pageable);
         return events.map(this::toDto);
     }
 

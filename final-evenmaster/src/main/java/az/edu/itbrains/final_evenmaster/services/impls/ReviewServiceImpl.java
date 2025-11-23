@@ -1,6 +1,6 @@
 package az.edu.itbrains.final_evenmaster.services.impls;
 
-import az.edu.itbrains.final_evenmaster.dtos.ReviewDto;
+import az.edu.itbrains.final_evenmaster.dtos.review.ReviewDto;
 import az.edu.itbrains.final_evenmaster.mapper.ReviewMapper;
 import az.edu.itbrains.final_evenmaster.models.Event;
 import az.edu.itbrains.final_evenmaster.models.Review;

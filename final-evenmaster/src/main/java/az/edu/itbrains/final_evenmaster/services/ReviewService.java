@@ -1,6 +1,6 @@
 package az.edu.itbrains.final_evenmaster.services;
 
-import az.edu.itbrains.final_evenmaster.dtos.ReviewDto;
+import az.edu.itbrains.final_evenmaster.dtos.review.ReviewDto;
 
 import java.security.Principal;
 import java.util.List;
