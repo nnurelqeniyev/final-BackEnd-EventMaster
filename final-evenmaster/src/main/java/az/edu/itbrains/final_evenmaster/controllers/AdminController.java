@@ -25,7 +25,7 @@ public class AdminController {
     @GetMapping
     public String adminPanel(Model model) {
         List<Event> pendingEvents = eventRepository.findByStatus(EventStatus.PENDING);   // ✅ Enum göndər
-        List<Event> approvedEvents = eventRepository.findByStatus(EventStatus.approved); // ✅ Enum göndər
+        List<Event> approvedEvents = eventRepository.findByStatus(EventStatus.APPROVED); // ✅ Enum göndər
         model.addAttribute("pendingEvents", pendingEvents);
         model.addAttribute("approvedEvents", approvedEvents);
         return "admin"; // admin.html
@@ -33,7 +33,7 @@ public class AdminController {
     @PostMapping("/approve")
     public String approveEvent(@RequestParam Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
-        event.setStatus(EventStatus.approved);
+        event.setStatus(EventStatus.APPROVED);
         eventRepository.save(event);
         return "redirect:/admin";
     }

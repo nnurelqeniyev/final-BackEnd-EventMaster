@@ -49,7 +49,7 @@ public class ReviewController {
         return "redirect:/events/event?id=" + eventId;
     }
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String deleteReview(@RequestParam Long id, @RequestParam Long eventId) {
         reviewRepository.deleteById(id);
         return "redirect:/events/event?id=" + eventId;

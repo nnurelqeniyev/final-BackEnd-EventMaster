@@ -120,7 +120,7 @@ public class EventServiceImpl implements EventService {
     }
     @Override
     public Page<EventDto> getApprovedEventDtos(Pageable pageable) {
-        Page<Event> events = eventRepository.findByStatus(EventStatus.approved, pageable);
+        Page<Event> events = eventRepository.findByStatus(EventStatus.APPROVED, pageable);
         return events.map(this::toDto);
     }
 

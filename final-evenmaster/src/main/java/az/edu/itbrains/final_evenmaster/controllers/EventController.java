@@ -71,7 +71,7 @@ public class EventController {
     @PreAuthorize("hasRole('ADMIN')")
     public String approveEvent(@PathVariable Long id) {
         Event event = eventRepository.findById(id).orElseThrow();
-        event.setStatus(EventStatus.approved);
+        event.setStatus(EventStatus.APPROVED);
         eventRepository.save(event);
         return "redirect:/events/admin/pending";
     }

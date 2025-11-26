@@ -69,90 +69,11 @@ body > * {
               <input type="datetime-local"
                      th:field="*{dateLine}"
                      required
-                     style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />              <p>Şirkət: <span th:text="${organizer.company.name}" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);"></span></p>
-              <select th:field="*{location}" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);">
-                  <option value="">Məkan seçin</option>
-                  <option value="Bütün Azərbaycan">Bütün Azərbaycan</option>
-                  <optgroup label="Şəhərlər">
-                      <option value="Bakı">Bakı</option>
-                      <option value="Gəncə">Gəncə</option>
-                      <option value="Sumqayıt">Sumqayıt</option>
-                      <option value="Mingəçevir">Mingəçevir</option>
-                      <option value="Şirvan">Şirvan</option>
-                      <option value="Lənkəran">Lənkəran</option>
-                      <option value="Naftalan">Naftalan</option>
-                      <option value="Şəki">Şəki</option>
-                      <option value="Yevlax">Yevlax</option>
-                      <option value="Naxçıvan">Naxçıvan</option>
-                  </optgroup>
-                  <optgroup label="Rayonlar">
-                      <option value="Abşeron">Abşeron</option>
-                      <option value="Ağcabədi">Ağcabədi</option>
-                      <option value="Ağdam">Ağdam</option>
-                      <option value="Ağdaş">Ağdaş</option>
-                      <option value="Ağstafa">Ağstafa</option>
-                      <option value="Ağsu">Ağsu</option>
-                      <option value="Astara">Astara</option>
-                      <option value="Balakən">Balakən</option>
-                      <option value="Bərdə">Bərdə</option>
-                      <option value="Beyləqan">Beyləqan</option>
-                      <option value="Biləsuvar">Biləsuvar</option>
-                      <option value="Cəlilabad">Cəlilabad</option>
-                      <option value="Daşkəsən">Daşkəsən</option>
-                      <option value="Füzuli">Füzuli</option>
-                      <option value="Gədəbəy">Gədəbəy</option>
-                      <option value="Goranboy">Goranboy</option>
-                      <option value="Göyçay">Göyçay</option>
-                      <option value="Göygöl">Göygöl</option>
-                      <option value="Hacıqabul">Hacıqabul</option>
-                      <option value="İmişli">İmişli</option>
-                      <option value="İsmayıllı">İsmayıllı</option>
-                      <option value="Kürdəmir">Kürdəmir</option>
-                      <option value="Qax">Qax</option>
-                      <option value="Qazax">Qazax</option>
-                      <option value="Qəbələ">Qəbələ</option>
-                      <option value="Qobustan">Qobustan</option>
-                      <option value="Quba">Quba</option>
-                      <option value="Qubadlı">Qubadlı</option>
-                      <option value="Qusar">Qusar</option>
-                      <option value="Laçın">Laçın</option>
-                      <option value="Lerik">Lerik</option>
-                      <option value="Masallı">Masallı</option>
-                      <option value="Neftçala">Neftçala</option>
-                      <option value="Oğuz">Oğuz</option>
-                      <option value="Saatlı">Saatlı</option>
-                      <option value="Sabirabad">Sabirabad</option>
-                      <option value="Salyan">Salyan</option>
-                      <option value="Samux">Samux</option>
-                      <option value="Siyəzən">Siyəzən</option>
-                      <option value="Sumqayıt">Sumqayıt</option>
-                      <option value="Şabran">Şabran</option>
-                      <option value="Şamaxı">Şamaxı</option>
-                      <option value="Şəki">Şəki</option>
-                      <option value="Şəmkir">Şəmkir</option>
-                      <option value="Şuşa">Şuşa</option>
-                      <option value="Tərtər">Tərtər</option>
-                      <option value="Tovuz">Tovuz</option>
-                      <option value="Ucar">Ucar</option>
-                      <option value="Xaçmaz">Xaçmaz</option>
-                      <option value="Xızı">Xızı</option>
-                      <option value="Xocalı">Xocalı</option>
-                      <option value="Xocavənd">Xocavənd</option>
-                      <option value="Yardımlı">Yardımlı</option>
-                      <option value="Zaqatala">Zaqatala</option>
-                      <option value="Zəngilan">Zəngilan</option>
-                      <option value="Zərdab">Zərdab</option>
-                  </optgroup>
-                  <optgroup label="Naxçıvan MR">
-                      <option value="Babək">Babək</option>
-                      <option value="Culfa">Culfa</option>
-                      <option value="Kəngərli">Kəngərli</option>
-                      <option value="Ordubad">Ordubad</option>
-                      <option value="Şahbuz">Şahbuz</option>
-                      <option value="Sədərək">Sədərək</option>
-                  </optgroup>
-              </select>
-          </div>
+                     style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
+              <p>Şirkət: <span th:text="${organizer.company.name}" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);"></span></p>
+              <input type="text" id="location" name="location" class="form-input"
+                     placeholder="Məkan"
+                     th:value="${eventDto.location}" required />          </div>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <input type="number" min="0" th:field="*{priceStandard}" placeholder="Standart qiymət (AZN)" required style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
                 <input type="number" min="0" th:field="*{priceVip}" placeholder="VIP qiymət (AZN, opsional)" style="padding:12px; border-radius:10px; background:#161822; border:1px solid var(--border); color:var(--text);" />
@@ -162,9 +83,6 @@ body > * {
           <button class="btn primary" type="submit">Göndər</button>
           <p style="color:var(--muted); margin:0;">Qeyd: Admin təsdiq etdikdən sonra siyahıda görünəcək.</p>
         </form>
-
-        <h2 style="margin: 18px 0 8px;">Mənim göndərdiklərim</h2>
-        <div id="mineList" style="display:grid; gap:10px;"></div>
       </div>
     </section>
   </main>

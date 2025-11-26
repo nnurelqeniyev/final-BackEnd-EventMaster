@@ -40,7 +40,7 @@ body > * {
     .dashboard {
       display: grid;
       grid-template-columns: 280px 1fr;
-      min-height: 100vh;
+      min-height: calc(100vh - 60px);
       background: var(--bg);
     }
 
@@ -71,7 +71,8 @@ body > * {
       padding: 12px 16px;
       margin: 4px 0;
       border-radius: 10px;
-      color: var(--muted);
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
       text-decoration: none;
       transition: all 0.2s ease;
     }
@@ -87,7 +88,7 @@ body > * {
     }
 
     .dashboard-nav-item svg {
-      width: 20px;
+      width: 100px;
       height: 20px;
     }
 
@@ -210,7 +211,111 @@ body > * {
       font-weight: 700;
       margin: 0;
     }
+        /* Sticky Announcement Banner */
+    .announcement-banner {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
+      padding: 12px 24px;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
 
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .announcement-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .announcement-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .announcement-badge {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .announcement-features {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .feature-item svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .announcement-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .announcement-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
     .btn-create {
       background: linear-gradient(135deg, var(--brand), var(--brand-2));
       border: none;
@@ -376,7 +481,26 @@ body > * {
       .dashboard {
         grid-template-columns: 1fr;
       }
+        .announcement-banner {
+        padding: 10px 16px;
+      }
 
+      .announcement-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .announcement-features {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .feature-item {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
       .dashboard-sidebar {
         position: static;
         height: auto;
@@ -410,6 +534,43 @@ body > * {
     </style>
 </head>
 <body>
+<div class="announcement-banner">
+    <div class="announcement-content">
+        <div class="announcement-text">
+            <span class="announcement-badge">Yeni</span>
+            <span>Yeni funksiyalar əlavə olundu!</span>
+        </div>
+        <div class="announcement-features">
+            <div class="feature-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Real-vaxt analitika</span>
+            </div>
+            <div class="feature-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <span>Daha rahat istifadə</span>
+            </div>
+            <div class="feature-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span>Sürətli ödəniş</span>
+            </div>
+            <div class="feature-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span>Gelişmiş hesabatlar</span>
+            </div>
+        </div>
+        <a href="/organizer/stats" class="dashboard-nav-item">
+            Yeni xüsusiyyətə baxın
+        </a>
+    </div>
+</div>
 <div class="dashboard">
     <!-- Sidebar -->
     <aside class="dashboard-sidebar">
@@ -421,8 +582,33 @@ body > * {
             <a href="/" class="nnn">EventMaster</a>
         </div>
         <nav class="dashboard-nav">
-            <a href="/events/create" class="dashboard-nav-item">Tədbir yarat</a>
-            <a href="/logout" class="dashboard-nav-item">Çıxış</a>
+            <a href="/organizer/stats" class="dashboard-nav-item">
+                <!-- Chart / Stats icon -->
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                Statistika
+            </a>
+
+            <a href="/events/create" class="dashboard-nav-item">
+                <!-- Plus / Create icon -->
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 4v16m8-8H4"/>
+                </svg>
+                Tədbir yarat
+            </a>
+
+            <a href="/logout" class="dashboard-nav-item">
+                <!-- Logout icon -->
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0
+                 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                </svg>
+                Çıxış
+            </a>
         </nav>
     </aside>
 

@@ -29,7 +29,6 @@ body.stats-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 32px 16px;
   position: relative;
   overflow-x: hidden;
 }
@@ -164,7 +163,6 @@ body.stats-page::before {
 .stat-card:hover .value {
   transform: scale(1.05);
 }
-
 .chart-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -214,43 +212,618 @@ body.stats-page::before {
   font-weight: 600;
   color: var(--text);
 }
-        /* Bar container */
-.bar-container {
+
+/* Bar chart container */
+.bar-chart {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 16px;
   height: 200px;
   padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
 }
 
-/* Normal bar */
-.bar-normal {
+/* Each bar */
+.bar {
   flex: 1;
-  background-color: #4a90e2;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height:100%;
 }
 
-/* VIP bar */
-.bar-vip {
-  flex: 1;
+/* Bar fill (dynamic height) */
+.bar-fill {
+  width: 20%;
+  border-radius: 6px 6px 0 0;
+  transition: height 4s ease;
+}
+
+/* VIP bar color */
+.bar.vip .bar-fill {
   background-color: #f5a623;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease;
+}
+
+/* Normal bar color */
+.bar.normal .bar-fill {
+  background-color: #4a90e2;
 }
 
 /* Label */
 .bar-label {
   text-align: center;
-  font-size: 12px;
-  margin-top: 4px;
-  color: #333;
+  font-size: 13px;
+  margin-top: 6px;
+  color: white;
 }
+        body {
+  background:
+    radial-gradient(ellipse 1400px 800px at 15% -5%, rgba(108,92,231,0.35), transparent 50%),
+    radial-gradient(ellipse 1200px 700px at 85% 10%, rgba(0,209,178,0.25), transparent 55%),
+    radial-gradient(ellipse 1000px 600px at 50% 90%, rgba(108,92,231,0.15), transparent 50%),
+    radial-gradient(ellipse 800px 500px at 0% 50%, rgba(0,209,178,0.12), transparent 45%),
+    linear-gradient(135deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,1) 100%),
+    var(--bg, #0b0c10);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle 600px at 30% 20%, rgba(108,92,231,0.08), transparent 70%),
+    radial-gradient(circle 500px at 70% 80%, rgba(0,209,178,0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body > * {
+  position: relative;
+  z-index: 1;
+}
+    /* Dashboard Specific Styles */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 60px);
+      background: var(--bg);
+    }
+
+    .dashboard-sidebar {
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .dashboard-sidebar .brand {
+      padding: 0 24px 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .dashboard-nav {
+      padding: 0 16px;
+    }
+
+    .dashboard-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .dashboard-nav-item:hover {
+      background: rgba(108, 92, 231, 0.1);
+      color: var(--brand);
+    }
+
+    .dashboard-nav-item.active {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white;
+    }
+
+    .dashboard-nav-item svg {
+      width: 100px;
+      height: 20px;
+    }
+
+    .dashboard-main {
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .dashboard-header {
+      margin-bottom: 32px;
+    }
+
+    .dashboard-header h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .dashboard-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    }
+
+    .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .stat-card-title {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .nnn{
+    color: white;
+    text-decoration: none;
+    }
+    .stat-card-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(108, 92, 231, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+    }
+
+    .stat-card-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0;
+      color: var(--text);
+    }
+
+    .stat-card-change {
+      font-size: 14px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-card-change.positive {
+      color: var(--brand-2);
+    }
+
+    .stat-card-change.negative {
+      color: #ff6b6b;
+    }
+
+    .dashboard-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .dashboard-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dashboard-section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+    }
+        /* Sticky Announcement Banner */
+    .announcement-banner {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
+      padding: 12px 24px;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .announcement-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .announcement-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .announcement-badge {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .announcement-features {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .feature-item svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .announcement-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .announcement-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+    .btn-create {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+    }
+
+    .events-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .events-table th,
+    .events-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .events-table th {
+      background: rgba(108, 92, 231, 0.05);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .events-table td {
+      color: var(--text);
+    }
+
+    .event-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .event-status.approved {
+      background: rgba(0, 209, 178, 0.1);
+      color: var(--brand-2);
+    }
+
+    .event-status.pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .event-status.rejected {
+      background: rgba(255, 107, 107, 0.1);
+      color: #ff6b6b;
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    .chart-placeholder {
+      background: rgba(108, 92, 231, 0.05);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .chart-placeholder svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .insights-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .insight-item {
+      padding: 16px;
+      background: rgba(108, 92, 231, 0.05);
+      border-radius: 10px;
+      border-left: 4px solid var(--brand);
+    }
+
+    .insight-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .insight-description {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .profile-form {
+      display: grid;
+      gap: 20px;
+      max-width: 600px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-input {
+      padding: 12px 16px;
+      background: #161822;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--brand);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+        .announcement-banner {
+        padding: 10px 16px;
+      }
+
+      .announcement-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .announcement-features {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .feature-item {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+      .dashboard-sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-main {
+        padding: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .events-table {
+        font-size: 14px;
+      }
+
+      .events-table th,
+      .events-table td {
+        padding: 12px 8px;
+      }
+    }
     </style>
 </head>
 <body class="stats-page">
+<asid00e class="dashboard-sidebar" style="
+    justify-content: left;
+    margin: 0px 300px 0px 0px;
+    padding-left: 70px;
+    padding-right: 70px;
+">
+    <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M7 4v6m10-6v6M4 11h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <a href="/" class="nnn">EventMaster</a>
+    </div>
+    <nav class="dashboard-nav">
+        <a href="/organizer/stats" class="dashboard-nav-item">
+            <!-- Chart / Stats icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            Statistika
+        </a>
+
+        <a href="/events/create" class="dashboard-nav-item">
+            <!-- Plus / Create icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Tədbir yarat
+        </a>
+
+        <a href="/logout" class="dashboard-nav-item">
+            <!-- Logout icon -->
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0
+                 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"></path>
+            </svg>
+            Çıxış
+        </a>
+    </nav>
+</asid00e>
+</aside>
 <div class="page-shell">
     <header class="page-header">
         <p>Yeni tədbirin performansına sürətli baxış</p>
@@ -295,17 +868,21 @@ body.stats-page::before {
                 <h2 class="chart-title">Bar diaqram · VIP vs Normal</h2>
                 <div class="bar-chart" id="ticketBars">
                     <div class="bar vip">
-                        <div class="bar-fill" id="vipBar"></div>
+                        <div class="bar-fill" id="vipBar"
+                             th:style="'height:' + (${summary.vipCount} * 100 / (${summary.vipCount} + ${summary.normalCount})) + '%'">
+                        </div>
                         <div class="bar-label">
                             <span class="bar-name">VIP</span>
-                            <span class="bar-amount" id="vipBarAmount">0</span>
+                            <span class="bar-amount" id="vipBarAmount" th:text="${summary.vipCount}">0</span>
                         </div>
                     </div>
                     <div class="bar normal">
-                        <div class="bar-fill" id="normalBar"></div>
+                        <div class="bar-fill" id="normalBar"
+                             th:style="'height:' + (${summary.normalCount} * 100 / (${summary.vipCount} + ${summary.normalCount})) + '%'">
+                        </div>
                         <div class="bar-label">
                             <span class="bar-name">Normal</span>
-                            <span class="bar-amount" id="normalBarAmount">0</span>
+                            <span class="bar-amount" id="normalBarAmount" th:text="${summary.normalCount}">0</span>
                         </div>
                     </div>
                 </div>
@@ -313,30 +890,5 @@ body.stats-page::before {
         </section>
     </main>
 </div>
-<script>
-    (function () {
-      const get = (id) => document.getElementById(id);
-      const vip = Number(get("vipCount")?.dataset.count || 0);
-      const normal = Number(get("normalCount")?.dataset.count || 0);
-      const total = vip + normal;
-
-      if (total > 0) {
-        const vipPercent = (vip / total) * 100;
-        const normalPercent = 100 - vipPercent;
-
-        const vipBar = get("vipBar");
-        const normalBar = get("normalBar");
-
-        if (vipBar) vipBar.style.height = `${vipPercent}%`;
-        if (normalBar) normalBar.style.height = `${normalPercent}%`;
-
-        get("vipBarAmount").textContent = `${vip}`;
-        get("normalBarAmount").textContent = `${normal}`;
-      } else {
-        get("vipBarAmount").textContent = "0";
-        get("normalBarAmount").textContent = "0";
-      }
-    })();
-</script>
 </body>
 </html>

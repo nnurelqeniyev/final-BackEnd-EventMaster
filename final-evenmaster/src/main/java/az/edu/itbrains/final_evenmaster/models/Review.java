@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 public class Review {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
